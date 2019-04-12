@@ -11,7 +11,7 @@ for index = 1:nbr_of_states
     % perform a unform random dist between min and max values for that
     % state
     particles(index, :, 1) = (max(index) - min(index))* rand(nbr_of_particles,1) + min(index); % particles
-    particles(index, :, 2) = rand(nbr_of_particles,1); % particle weight
+    particles(index, :, 2) = (1/nbr_of_particles)*ones(nbr_of_particles,1); % particle weight
 end
 
 end
