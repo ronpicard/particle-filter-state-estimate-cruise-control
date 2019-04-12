@@ -1,9 +1,9 @@
-function [particles] = particle_resampler(particles, nbr_of_particles, keep_probability, mu, sigma, nbr_of_states)
+function [particles] = particle_resampler(particles, nbr_of_particles, keep_probability, sigma, nbr_of_states)
 
     for state = 1:nbr_of_states
 
-        % sort weights
-        particles(state, :, 2) = sort(particles(state, :, 2));
+        % sort weights in descending order
+        particles(state, :, 2) = sort(particles(state, :, 2),'descend');
 
         % sort particles by weights
         particles(state, :, 1) = sort_a_like_b(sorted_weights, particles(state, :, 1));
@@ -16,12 +16,17 @@ function [particles] = particle_resampler(particles, nbr_of_particles, keep_prob
         kept_weights = particles(state, 1:max_keep_index, 1);
 
         % duplicate particles with kernel trick
-        nbr_new_particles = nbr_of_particles - max_keep_index;
-        for new_particle_index = 1:nbr_new_particles
-            particle_to_duplicate = round(nbr_new_particles*rand());
+        for new_particle_index = max_keep_index+1:nbr_of_particles
+            % choose a random index from kept particles
+            index_of_particle_to_duplicate = randi(max_keep_index);
+            % get particle value and weight
+            mu = particles(state, 1:max_keep_index+new_particle_index, 1);
+            weight = particles(state, 1:max_keep_index+new_particle_index, 2);
+            % duplicate based off gaussian value around the particle
             kernel_trick = normrnd(mu,sigma);
-            particles(state, 1:max_keep_index+new_particle_index, 2) = particles(state, particle_to_duplicate, 2) + kernel_trick;
-            particles(state, 1:max_keep_index+new_particle_index, 1) = particles(state, particle_to_duplicate, 1) + kernel_trick;
+            % store new particle & dupilcate weight
+            particles(state, 1:max_keep_index+new_particle_index, 1) = kernel_trick;
+            particles(state, 1:max_keep_index+new_particle_index, 1) = weight;
         end
 
     end
