@@ -6,7 +6,7 @@ function [particles] = particle_resampler(particles, nbr_of_particles, keep_prob
         particles(state, :, 2) = sort(particles(state, :, 2),'descend');
 
         % sort particles by weights
-        particles(state, :, 1) = sort_a_like_b(sorted_weights, particles(state, :, 1));
+        particles(state, :, 1) = sort_b_like_a(particles(state, :, 2), particles(state, :, 1));
 
         % find the max index up to which the particles will be kept
         max_keep_index = round(keep_probability*nbr_of_particles);
@@ -25,10 +25,15 @@ function [particles] = particle_resampler(particles, nbr_of_particles, keep_prob
             % duplicate based off gaussian value around the particle
             kernel_trick = normrnd(mu,sigma);
             % store new particle & dupilcate weight
-            particles(state, 1:max_keep_index+new_particle_index, 1) = kernel_trick;
-            particles(state, 1:max_keep_index+new_particle_index, 1) = weight;
+            particles(state, new_particle_index, 1) = kernel_trick;
+            particles(state, new_particle_index, 2) = weight;
         end
 
+       % normalize the particles so that all the weights add up to one
+       normalization_factor = sum(particles(state, :, 2));
+       for index = 1:nbr_of_particles
+            particles(state, index, 2) = particles(state, index, 2)/normalization_factor;
+       end
     end
     
 end
