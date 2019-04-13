@@ -3,7 +3,7 @@ function [particles] = particle_resampler(particles, nbr_of_particles, keep_prob
     for state = 1:nbr_of_states
 
         % sort weights in descending order
-        particles(state, :, 2) = sort(particles(state, :, 2),'descend');
+        particles(state, :, 2) = sort(particles(state, :, 2),'ascend');
 
         % sort particles by weights
         particles(state, :, 1) = sort_b_like_a(particles(state, :, 2), particles(state, :, 1));
@@ -12,8 +12,11 @@ function [particles] = particle_resampler(particles, nbr_of_particles, keep_prob
         max_keep_index = round(keep_probability*nbr_of_particles);
 
         % keep a certain portion of the particle
-        kept_particles = particles(state, 1:max_keep_index, 2);
-        kept_weights = particles(state, 1:max_keep_index, 1);
+        %kept_particles = particles(state, 1:max_keep_index, 2);
+        %kept_weights = particles(state, 1:max_keep_index, 1);
+
+        %new_particles = zeros(state, 1:(nbr_of_particles-max_keep_index), 2);
+        %new_weight = zeros(state, 1:(nbr_of_particles-max_keep_index), 2);
 
         % duplicate particles with kernel trick
         for new_particle_index = max_keep_index+1:nbr_of_particles
