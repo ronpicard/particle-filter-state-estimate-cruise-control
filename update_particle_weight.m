@@ -3,7 +3,7 @@ function [particles, new_weight] = update_particle_weight(nbr_of_states,predicte
     % for each state
     for state = 1:nbr_of_states
         % calculate the likelihood of measured value
-        new_weight = abs(measured_v-predicted_velocity)/velocity_sigma;
+        new_weight = abs(measured_v-predicted_velocity);
 
 %        new_weight = abs(measured_v-predicted_velocity)/velocity_sigma;
 
